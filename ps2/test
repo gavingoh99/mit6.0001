@@ -1,0 +1,113 @@
+import string
+def get_available_letters(letters_guessed):
+    '''
+    letters_guessed: list (of letters), which letters have been guessed so far
+    returns: string (of letters), comprised of letters that represents which letters have not
+      yet been guessed.
+    '''
+    remaining_letters = string.ascii_lowercase
+    for char in letters_guessed:
+        all_letters = remaining_letters[:]
+        if char in all_letters:
+            remaining_letters = remaining_letters.replace(char, "")
+    return remaining_letters
+
+def get_guessed_word(secret_word, letters_guessed):
+    '''
+    secret_word: string, the word the user is guessing
+    letters_guessed: list (of letters), which letters have been guessed so far
+    returns: string, comprised of letters, underscores (_), and spaces that represents
+      which letters in secret_word have been guessed so far.
+    '''
+    current_guess = []
+    for char in secret_word:
+      if char in letters_guessed:
+        current_guess.append(char)
+      else:
+        current_guess.append('_ ')
+    guessed_word = ''.join(current_guess)
+    return guessed_word
+
+def hangman(secret_word):
+    '''
+    secret_word: string, the secret word to guess.
+    
+    Starts up an interactive game of Hangman.
+    
+    * At the start of the game, let the user know how many 
+      letters the secret_word contains and how many guesses s/he starts with.
+      
+    * The user should start with 6 guesses
+
+    * Before each round, you should display to the user how many guesses
+      s/he has left and the letters that the user has not yet guessed.
+    
+    * Ask the user to supply one guess per round. Remember to make
+      sure that the user puts in a letter!
+    
+    * The user should receive feedback immediately after each guess 
+      about whether their guess appears in the computer's word.
+
+    * After each guess, you should display to the user the 
+      partially guessed word so far.
+    
+    Follows the other limitations detailed in the problem write-up.
+    '''
+    print('Welcome to the game Hangman!')
+    x = 'yay'
+    
+    total_guesses = 6
+    warnings_remaining = 3
+    print('I am thinking of a word that is', str(len(x)), 'letters long.')
+    print('You have', warnings_remaining, 'warnings left.')
+    
+    list_of_guessed_letters = []
+    vowels = ['a', 'e', 'i', 'o', 'u']
+    
+    for current_guess in range(total_guesses):
+        guesses_remaining = 6
+        
+        print('-' * 13)
+        print(current_guess)
+        print(total_guesses)
+        print(guess_remaining)
+        #if current_guess == guess_remaining:
+            #print('Sorry, you ran out of guesses. The word was', x)
+            #break
+        print('You have', guess_remaining, 'guesses left.')
+        print('Available letters: ', get_available_letters(list_of_guessed_letters))
+        raw_guess = str(input('Please guess a letter: '))
+        if raw_guess.isalpha():
+            current_letter_guess = raw_guess.lower()
+            if current_letter_guess in list_of_guessed_letters:
+                if warnings_remaining >= 1:
+                    warnings_remaining -= 1
+                    print('''Oops! You've already guessed that letter. You now have''', warnings_remaining, 'warnings left:', get_guessed_word(x, list_of_guessed_letters))
+                else:
+                    print('''Oops! You've already guessed that letter. You have no warnings left so you lose one guess:''', get_guessed_word(x, list_of_guessed_letters))
+                    guess_remaining -= 1
+            else:
+                list_of_guessed_letters.append(current_letter_guess)
+                if current_letter_guess in x:
+                    print('Good guess:', get_guessed_word(x, list_of_guessed_letters))
+                else:
+                    print('Oops! That letter is not in my word:', get_guessed_word(x, list_of_guessed_letters))
+                    if current_letter_guess in vowels:
+                        guess_remaining -= 2
+                    else:
+                        guess_remaining -= 1
+        elif not raw_guess.isalpha():
+            if warnings_remaining >= 1:
+                warnings_remaining -= 1
+                print('Oops! That is not a valid letter. You have', warnings_remaining, 'warnings left:', get_guessed_word(x, list_of_guessed_letters))
+                continue
+            else:
+                print('''Oops! You've already guessed that letter. You have no warnings left so you lose one guess:''', get_guessed_word(x, list_of_guessed_letters))
+                guess_remaining -= 1
+                continue
+        
+        
+        #if is_word_guessed(x, list_of_guessed_letters):
+            #print('Congratulations, you won!')
+x = 'hello'
+hangman(x)
